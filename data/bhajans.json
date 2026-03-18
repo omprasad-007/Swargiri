@@ -1,0 +1,56 @@
+[
+  {
+    "id": "shiva-om-namah-shivaya",
+    "title": "Om Namah Shivaya",
+    "god": "shiva",
+    "youtubeId": "0qU2b73K-2I",
+    "lyrics": "Om Namah Shivaya, Shivaya Namah Om...\nHar Har Bhole Namah Shivaya, Girija Shankara Namah Shivaya...",
+    "meaning": "I bow to Lord Shiva, the auspicious one. Hail to the benevolent one, the consort of Girija (Parvati).",
+    "relatedBhajans": ["shiva-mahamrityunjaya-mantra"]
+  },
+  {
+    "id": "shiva-mahamrityunjaya-mantra",
+    "title": "Mahamrityunjaya Mantra",
+    "god": "shiva",
+    "youtubeId": "ll23zF6t-tU",
+    "lyrics": "Om Tryambakam Yajamahe Sugandhim Pushti-Vardhanam\nUrvarukamiva Bandhanan Mrityor Mukshiya Maamritat",
+    "meaning": "We worship the three-eyed Lord Shiva, who is naturally fragrant, immensely merciful, and who nourishes all beings. May He liberate us from death for the sake of immortality, just as a cucumber is severed from its bondage to the creeper.",
+    "relatedBhajans": ["shiva-om-namah-shivaya"]
+  },
+  {
+    "id": "ram-shri-ram-jai-ram",
+    "title": "Shri Ram Jai Ram Jai Jai Ram",
+    "god": "ram",
+    "youtubeId": "L0yX6e8L-P8",
+    "lyrics": "Shri Ram Jai Ram Jai Jai Ram...\nSita Ram Jai Ram Jai Jai Ram...",
+    "meaning": "Victory to Lord Rama, victory to Sita and Rama.",
+    "relatedBhajans": ["ram-raghupati-raghav-raja-ram"]
+  },
+  {
+    "id": "ram-raghupati-raghav-raja-ram",
+    "title": "Raghupati Raghav Raja Ram",
+    "god": "ram",
+    "youtubeId": "W4-pYVb29p4",
+    "lyrics": "Raghupati Raghav Raja Ram, Patit Pavan Sita Ram\nIshwar Allah Tero Naam, Sabko Sanmati De Bhagwan",
+    "meaning": "Lord of the Raghu dynasty, King Rama, purifier of the fallen, Sita and Rama. God and Allah are Your names; bestow wisdom upon everyone, O Lord.",
+    "relatedBhajans": ["ram-shri-ram-jai-ram"]
+  },
+  {
+    "id": "krishna-hare-krishna-maha-mantra",
+    "title": "Hare Krishna Maha Mantra",
+    "god": "krishna",
+    "youtubeId": "v8mSAb98_10",
+    "lyrics": "Hare Krishna Hare Krishna, Krishna Krishna Hare Hare\nHare Rama Hare Rama, Rama Rama Hare Hare",
+    "meaning": "O Lord, O energy of the Lord, please engage me in Your devotional service.",
+    "relatedBhajans": ["krishna-achyutam-keshavam"]
+  },
+  {
+    "id": "krishna-achyutam-keshavam",
+    "title": "Achyutam Keshavam Krishna Damodaram",
+    "god": "krishna",
+    "youtubeId": "k1t0B9n6S7I",
+    "lyrics": "Achyutam Keshavam Krishna Damodaram\nRama Narayanam Janaki Vallabham",
+    "meaning": "O Achyuta (imperishable), O Keshava (having long hair), O Krishna, O Damodara (one with a rope around his belly). O Rama, O Narayana, O consort of Janaki (Sita).",
+    "relatedBhajans": ["krishna-hare-krishna-maha-mantra"]
+  }
+]

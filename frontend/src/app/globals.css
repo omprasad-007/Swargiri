@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme {
+  --color-saffron: #ff9933;
+  --color-marigold: #ffc200;
+  --color-deep-blue: #000080;
+  --color-primary-purple: #a855f7;
+  --color-primary-pink: #ec4899;
+  --color-cyan-glow: #22d3ee;
+  
+  --color-background-light: #fdfaf5;
+  --color-primary-indigo: #6366f1;
+}
+
+@layer base {
+  :root {
+    --background: #fdfaf5;
+    --foreground: #1c1917;
+  }
+
+  .dark {
+    --background: #0c0a09;
+    --foreground: #fdfaf5;
+  }
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-light {
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, #a855f7, #ec4899, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.4);
+}

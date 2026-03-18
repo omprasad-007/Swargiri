@@ -1,0 +1,17 @@
+{
+  "name": "Swargiri - The Digital Kirtan & Bhajan Platform",
+  "short_name": "Swargiri",
+  "description": "The Digital Kirtan & Bhajan Platform for devotional music and learning.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0a09",
+  "theme_color": "#ff9933",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
