@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aethel Music</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "error-container": "#93000a",
+                        "outline": "#99907c",
+                        "on-primary-fixed-variant": "#574500",
+                        "on-tertiary-fixed": "#1c1c17",
+                        "primary-container": "#d4af37",
+                        "on-error": "#690005",
+                        "on-secondary": "#303030",
+                        "primary-fixed": "#ffe088",
+                        "on-tertiary-fixed-variant": "#474741",
+                        "on-surface-variant": "#d0c5af",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed": "#e4e2e1",
+                        "tertiary-container": "#b5b3ab",
+                        "primary": "#f2ca50",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary-container": "#46453f",
+                        "surface-bright": "#393939",
+                        "surface-variant": "#353534",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "primary-fixed-dim": "#e9c349",
+                        "secondary-container": "#474747",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-primary-container": "#554300",
+                        "on-primary": "#3c2f00",
+                        "on-primary-fixed": "#241a00",
+                        "on-background": "#e5e2e1",
+                        "surface-container-high": "#2a2a2a",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#131313",
+                        "secondary": "#c8c6c5",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-tint": "#e9c349",
+                        "surface-container-highest": "#353534",
+                        "outline-variant": "#4d4635",
+                        "on-surface": "#e5e2e1",
+                        "surface": "#131313",
+                        "background": "#131313",
+                        "on-tertiary": "#31312b",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#c9c6be",
+                        "tertiary": "#d1cec6",
+                        "tertiary-fixed": "#e5e2da",
+                        "inverse-primary": "#735c00",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-secondary-container": "#b6b5b4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "stack-gap": "48px",
+                        "margin-desktop": "64px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["\"Source Serif 4\""],
+                        "display-lg-mobile": ["\"Source Serif 4\""],
+                        "headline-sm": ["\"Source Serif 4\""],
+                        "headline-md": ["\"Source Serif 4\""],
+                        "body-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "label-caps": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased pb-[140px] md:pb-[90px] selection:bg-primary/30 selection:text-primary">
+<!-- TopAppBar (Shared Component) -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-outline-variant/10 fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 transition-opacity">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant/30 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
+<img alt="Profile of student or artist" class="w-full h-full object-cover" data-alt="A highly detailed, professional headshot of a classical musician in soft, warm lighting. The aesthetic is modern, sophisticated, and moody with deep shadows and golden highlights. The background is a blurred dark studio setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPwdEGC52oOtV58bpxS0DVSU3RVDTUXkta3AWLzzbwMpXTK-F5Lcq4eKuJv85TRgTltqys9126nsywjfRccSjS5R-c8fKRI7CDFQn9GJE-QL9OjosVzOWc8C-PHwbUPQY5kLCAPybzCT9DKZWkqXUBQ8bF3ezsQwW6_ujP1H6cEdZDjvA1Jf4tiQFI4oU84XrbkJEBnwX2AAj_KwpQfhqR4X-towTrPAPdtFfUaE-kpGA1i5dPSr9q"/>
+</div>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary dark:text-primary-fixed tracking-tight">Aethel Music</h1>
+</div>
+<!-- Desktop Navigation (Hidden on mobile) -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-label-caps text-label-caps text-primary dark:text-primary-fixed font-bold hover:opacity-80 transition-opacity" href="#">Home</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity" href="#">Explore</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity" href="#">Learn</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity" href="#">Wellness</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity" href="#">Social</a>
+</nav>
+<button class="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-variant/30">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</header>
+<main class="pt-16 mx-auto max-w-container-max w-full">
+<!-- Hero Section -->
+<section class="relative w-full h-[530px] md:h-[618px] flex items-end pb-gutter px-margin-mobile md:px-margin-desktop mb-stack-gap">
+<div class="absolute inset-0 w-full h-full">
+<div class="w-full h-full bg-cover bg-center" data-alt="A breathtaking, wide-angle cinematic shot of a vast, dimly lit orchestral hall empty of people. Dust motes dance in a single, intense shaft of golden light piercing through an unseen high window, illuminating an ancient wooden cello resting on a stand. The color palette is composed of deep, rich blacks, dark espresso browns, and gleaming metallic gold. The mood is reverent, archival, and deeply artistic, embodying a 'Modern Classic' luxury aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB2Bd6cCS6zwNNIIRRJAQqrXA9WfuqxX3y4El4B_SgjNVdWUWSnwnrrcCQGQjZpl0-yMbgu52pWo678gr7nVzZeBiDl9bgOQE4nju2gvmi36E6DwWNaR59CvinK2PIwxoxRKfKqQ2ByCb1Xp5aV9kxBjeqfhK9RFGe1x8WHz3dnIIDSNTM9muDgIFKqpaUQkEm-gMdj-Wng0K-5s8b3fq6-KnYDSOrxz4BTrc0hLC6m8S_7SEdQHKUM')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-2xl">
+<span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-4 block">Curated Archives</span>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-4">Music for Every Moment</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8 max-w-lg">Discover the profound depths of global musical heritage, restored and curated for the modern listener.</p>
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-6 py-3 rounded-full hover:bg-primary-fixed-dim transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+                    Start Listening
+                </button>
+</div>
+</section>
+<!-- Made For You (Bento Grid) -->
+<section class="px-margin-mobile md:px-margin-desktop mb-stack-gap">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline-md text-headline-md text-on-surface">Made For You</h3>
+<button class="text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-unit md:gap-gutter auto-rows-[200px] md:auto-rows-[300px]">
+<div class="relative rounded-xl overflow-hidden group md:col-span-2 row-span-2 md:row-span-1 bg-surface-container cursor-pointer">
+<div class="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A moody, high-end close up photograph of the intricate golden keys of a vintage saxophone. The lighting is low and dramatic, with warm amber reflections off the polished metal against a pitch-black background. The style is minimalist and highly textured." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBDyDvNfXgquV11rNSKXnt7mT6OuKs6n76Z-VnVnsvDC8y19SEiy-QQlhGzV8_z75nZtni1lpGg5tYhTmGzOnJ-0VostuPKT_MQ8U9Zq8BpzjQ4RqGLJ-5vkgHimD5hAz31zJYT63CUiH1em-WfIZPO_kcP9QFiVYTXh4ZTSnM-E2jPAOZb5zzBaHgQs-s9LEzZdhvh7-dWb2csVbxrsnCM-MQOi3AZ4o8Bls7oqB-QVtwkvQ4Tkt3g')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 via-surface-container-lowest/40 to-transparent"></div>
+<div class="absolute inset-0 p-gutter flex flex-col justify-end">
+<span class="font-label-caps text-label-caps text-primary mb-2">Daily Mix</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Archival Jazz Masters</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 line-clamp-2">A personalized journey through the restored recordings of mid-century legends.</p>
+</div>
+</div>
+<div class="relative rounded-xl overflow-hidden group bg-surface-container-high cursor-pointer border border-outline-variant/10">
+<div class="absolute inset-0 p-gutter flex flex-col justify-between">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">history_edu</span>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1 block">New Restorations</span>
+<h4 class="font-body-lg text-body-lg text-on-surface">The 1920s Paris Sessions</h4>
+</div>
+</div>
+</div>
+<div class="relative rounded-xl overflow-hidden group bg-surface-container-high cursor-pointer border border-outline-variant/10">
+<div class="absolute inset-0 p-gutter flex flex-col justify-between">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">award_star</span>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1 block">Curator's Choice</span>
+<h4 class="font-body-lg text-body-lg text-on-surface">Essential Baroque</h4>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Music Through Time -->
+<section class="mb-stack-gap overflow-hidden">
+<div class="px-margin-mobile md:px-margin-desktop mb-8">
+<h3 class="font-headline-md text-headline-md text-on-surface">Music Through Time</h3>
+</div>
+<div class="flex overflow-x-auto snap-x snap-mandatory gap-4 px-margin-mobile md:px-margin-desktop pb-4 hide-scrollbar">
+<div class="snap-start shrink-0 w-64 md:w-80 group cursor-pointer">
+<div class="aspect-[4/3] rounded-xl overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A stylized, textured illustration evoking the 1920s Art Deco era. Geometric patterns in gold and deep charcoal surround a stylized gramophone. The overall feeling is elegant, vintage, and distinctly architectural. Modern luxury styling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-o4h77QorFP8S0lftQEfdukVDdlEl6uRbXPI-siX7hXZY3BwLeiql9LerRD7u7u4DR0Md3N4xSAKkWR1cWUKABsAxhHNPJbyfGmwFEARySLwsVkoFjrb-z53REeAqWziHUkUx_XC6cduaBpsq3_2pvZAok-kKMDhfOFu5u3J6mimgJXS8_COGZJV3GEUzYy5zOMlDJOCE-s3flzQwlJf2wdktKo1mbjRzpmxlvF7-_Jho6jiUR_pY"/>
+<div class="absolute inset-0 bg-surface/20 group-hover:bg-transparent transition-colors"></div>
+<div class="absolute top-4 left-4 px-3 py-1 bg-surface-container/80 backdrop-blur-md rounded-full border border-primary/20">
+<span class="font-display-lg-mobile text-body-lg text-primary">1920s</span>
+</div>
+</div>
+<h4 class="font-body-lg text-body-lg text-on-surface group-hover:text-primary transition-colors">The Jazz Age</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Birth of modern improvisation</p>
+</div>
+<div class="snap-start shrink-0 w-64 md:w-80 group cursor-pointer">
+<div class="aspect-[4/3] rounded-xl overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A highly detailed macro photograph of aged sheet music resting on dark, weathered oak. The paper is thick parchment, yellowed with age, featuring elegant, sweeping handwritten musical notation in faded black ink. Soft, diffused warm lighting creates an atmosphere of historical discovery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGlVtdMdWLBtwogxU4C-ArA7iip3FsaKmGqSBKawIQOC8E9VkEI5nv8Qt-0jNAnKpjeyD6Vqioj-iM9_ATI2bKx9yQ2gzu9Nz5qpxALpuVbwNLExIg-6n5yZFWczjI1OB-iHvntWbIprxHCfjQ-N5atY5yjOStrCHqVMkXTgDYCxxSAU_3eGiiIr1JngbB7ZDSgUtEhI4OTx7uCp1eTLwTeGFxd6snj9GCB2Thy1_FU2WJt6Rk2W66"/>
+<div class="absolute inset-0 bg-surface/20 group-hover:bg-transparent transition-colors"></div>
+<div class="absolute top-4 left-4 px-3 py-1 bg-surface-container/80 backdrop-blur-md rounded-full border border-primary/20">
+<span class="font-display-lg-mobile text-body-lg text-primary">1700s</span>
+</div>
+</div>
+<h4 class="font-body-lg text-body-lg text-on-surface group-hover:text-primary transition-colors">Baroque Mastery</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Intricate counterpoint</p>
+</div>
+<div class="snap-start shrink-0 w-64 md:w-80 group cursor-pointer">
+<div class="aspect-[4/3] rounded-xl overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="An abstract, minimalist digital rendering representing the 1980s. A subtle grid pattern over a deep black background, intersected by a single, sharp diagonal beam of glowing neon blue light, evoking early synthesizers and digital audio. Sleek, refined, and atmospheric." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFXKtZ2asKk5EIbNodH3IvoBCsUtgPcVi_pfPWvf2kFmvZ1g6_cZn591si_2SGCMcM5ss4PtMjDmAE8VkqBEzcTj3YmQEJZln_-wXc_cea7dwImjDk2tWKb2EsojhPek-8vmx9Qt_XQTZ7AliNOK2w1Lo6Mf-yCpw0sSD0WnUurUktzWjSB7HHphGCpiSMKjotFBJ6bBuxZ97D7-r8DQ2BFrOwBS1GaAQaQ96tSO0woMYp0P3XBCGt"/>
+<div class="absolute inset-0 bg-surface/20 group-hover:bg-transparent transition-colors"></div>
+<div class="absolute top-4 left-4 px-3 py-1 bg-surface-container/80 backdrop-blur-md rounded-full border border-primary/20">
+<span class="font-display-lg-mobile text-body-lg text-primary">1980s</span>
+</div>
+</div>
+<h4 class="font-body-lg text-body-lg text-on-surface group-hover:text-primary transition-colors">Synth &amp; Digital</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">The dawn of electronic pop</p>
+</div>
+<div class="snap-start shrink-0 w-64 md:w-80 group cursor-pointer">
+<div class="aspect-[4/3] rounded-xl overflow-hidden mb-4 relative bg-surface-container-high flex items-center justify-center border border-outline-variant/10">
+<span class="font-label-caps text-label-caps text-on-surface-variant tracking-widest">VIEW TIMELINE</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Persistent Player -->
+<div class="fixed bottom-[72px] md:bottom-0 w-full z-40 bg-surface-container/80 dark:bg-surface-container/80 backdrop-blur-[30px] border-t border-primary/10 px-margin-mobile py-3 flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transition-transform duration-300">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-surface-container-high overflow-hidden shadow-md flex-shrink-0">
+<img alt="Album Art" class="w-full h-full object-cover" data-alt="A classic portrait of Frédéric Chopin rendered in a highly stylized, moody oil painting technique. Deep, shadowy background with soft light illuminating his face. The color palette is muted, focusing on earthy browns and greys, exuding a sense of melancholy and genius." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7Bu3rAp8xbWju56iK96vnullxfX7RCW1w8nE2MNBwKap2QrywyrB-HtS6vxRExg_c591kUx1JkPxGnCu2qj1mLCOcBRVJmGAAPsWaT27MjR2wCIxdoBx9hMhDyOb0yRq9D0D4qfRvaUmQQ8eCzWzdr98BO7NC7wfYTkO1AozfoHf6Oaxkxj8NxhW7phx5yyrQBV5z0kTAe4VXGg15taJOfRbWN_gekhFuxv_mw_ti3bcmd955YR4A"/>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium truncate max-w-[150px] md:max-w-xs">Nocturne in E-flat major, Op. 9, No. 2</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant truncate">Frédéric Chopin</span>
+</div>
+</div>
+<div class="flex items-center gap-4 md:gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors hidden md:block">
+<span class="material-symbols-outlined">info</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">skip_previous</span>
+</button>
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 32px;">play_circle</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">skip_next</span>
+</button>
+</div>
+<div class="hidden md:flex items-center gap-2 w-48">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">volume_up</span>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-2/3 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- BottomNavBar (Shared Component - Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container/90 dark:bg-surface-container/90 backdrop-blur-3xl z-50 rounded-t-xl border-t border-primary/10 shadow-lg">
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold scale-90 transition-all duration-200">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-[10px]">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary transition-colors">
+<span class="material-symbols-outlined mb-1">explore</span>
+<span class="font-label-caps text-[10px]">Explore</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary transition-colors">
+<span class="material-symbols-outlined mb-1">school</span>
+<span class="font-label-caps text-[10px]">Learn</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary transition-colors">
+<span class="material-symbols-outlined mb-1">self_care</span>
+<span class="font-label-caps text-[10px]">Wellness</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary transition-colors">
+<span class="material-symbols-outlined mb-1">group</span>
+<span class="font-label-caps text-[10px]">Social</span>
+</button>
+</nav>
+</body></html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Music Through Time - Aethel Music</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600&amp;family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "error-container": "#93000a",
+                        "outline": "#99907c",
+                        "on-primary-fixed-variant": "#574500",
+                        "on-tertiary-fixed": "#1c1c17",
+                        "primary-container": "#d4af37",
+                        "on-error": "#690005",
+                        "on-secondary": "#303030",
+                        "primary-fixed": "#ffe088",
+                        "on-tertiary-fixed-variant": "#474741",
+                        "on-surface-variant": "#d0c5af",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed": "#e4e2e1",
+                        "tertiary-container": "#b5b3ab",
+                        "primary": "#f2ca50",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary-container": "#46453f",
+                        "surface-bright": "#393939",
+                        "surface-variant": "#353534",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "primary-fixed-dim": "#e9c349",
+                        "secondary-container": "#474747",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-primary-container": "#554300",
+                        "on-primary": "#3c2f00",
+                        "on-primary-fixed": "#241a00",
+                        "on-background": "#e5e2e1",
+                        "surface-container-high": "#2a2a2a",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#131313",
+                        "secondary": "#c8c6c5",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-tint": "#e9c349",
+                        "surface-container-highest": "#353534",
+                        "outline-variant": "#4d4635",
+                        "on-surface": "#e5e2e1",
+                        "surface": "#131313",
+                        "background": "#131313",
+                        "on-tertiary": "#31312b",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#c9c6be",
+                        "tertiary": "#d1cec6",
+                        "tertiary-fixed": "#e5e2da",
+                        "inverse-primary": "#735c00",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-secondary-container": "#b6b5b4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "stack-gap": "48px",
+                        "margin-desktop": "64px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["\"Source Serif 4\""],
+                        "display-lg-mobile": ["\"Source Serif 4\""],
+                        "headline-sm": ["\"Source Serif 4\""],
+                        "headline-md": ["\"Source Serif 4\""],
+                        "body-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "label-caps": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl docked full-width top-0 z-50 border-b border-outline-variant/10 flat no shadows flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 fixed">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden shrink-0">
+<img alt="Profile of student or artist" class="w-full h-full object-cover" data-alt="A sophisticated black and white photographic portrait of a classical musician, dramatic lighting, sharp focus, capturing intense artistic concentration. The image should feel archival and high-end, fitting a luxury music platform. Minimalist dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnzBB5dKMx6U9hK4XoaNXST4261v2m9PaRfNck4GxkNKfAklybNOCoW4dtqk_bJf5iKUZdgzQuyi9Fc0a_uDnHcE-uAug-uvbCPVfWticnTbPxUqba2XJxo6jxT_-sZCT3B0MDljJDUCnI5A04cJWWaU6qWQdNkum_ZJETKrOwsJULHuj6-vn3egWVBo3c238WupF4nM7MvxhX2OkWyNuuG2mEqHPAmRCkkvdVpNSbaxM3p31dC-mf"/>
+</div>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary dark:text-primary-fixed tracking-tight hidden md:block">Aethel Music</h1>
+</div>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary dark:text-primary-fixed tracking-tight md:hidden">Aethel Music</h1>
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</header>
+<div class="flex flex-1 pt-16 h-full relative">
+<!-- NavigationDrawer (Desktop) -->
+<nav class="hidden md:flex flex-col h-full w-80 rounded-r-xl bg-surface dark:bg-surface-dim shadow-2xl py-gutter fixed z-40 border-r border-outline-variant/10">
+<div class="px-gutter mb-8 flex flex-col items-start">
+<div class="w-16 h-16 rounded-full overflow-hidden mb-4">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A sophisticated black and white photographic portrait of a classical musician, dramatic lighting, sharp focus, capturing intense artistic concentration. The image should feel archival and high-end, fitting a luxury music platform. Minimalist dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtaDpxT2mUMl2-BNzd5T_ueM83WLhKjNXDbU5Q9nr7MfiQgrO4cg4foCZPajojTjSvf6dN6nkFHDdCamLcIIjUmO6rMSq0l1TLIT-wenh-Hrm-7p-1dg0t5r86rYMUdNiQQk8iMEDSV3RoTmtmN9XDiqu5nWq77D5mVJDPQo4boxf_ODkOX2rwIjAawqoHBCt4ZtCoytBCImgJyR8aaviLmEPl4i-snDti2uik3ac4r9sTG1znO1ES"/>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Musical Voyager</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">1920s Era Specialist</p>
+<span class="font-label-caps text-label-caps text-primary mt-2 inline-block px-2 py-1 rounded bg-primary/10 border border-primary/20">Premium Member</span>
+</div>
+<ul class="flex-1 space-y-2">
+<li>
+<a class="bg-primary-container text-on-primary-container rounded-full mx-2 px-4 py-3 flex items-center gap-4 active:opacity-70 transition-opacity" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-body-lg text-body-lg">Explore</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-variant rounded-full mx-2 px-4 py-3 flex items-center gap-4 hover:bg-surface-variant/50 transition-colors" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-body-lg text-body-lg">Era Discovery</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-variant rounded-full mx-2 px-4 py-3 flex items-center gap-4 hover:bg-surface-variant/50 transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-body-lg text-body-lg">Regional Traditions</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-variant rounded-full mx-2 px-4 py-3 flex items-center gap-4 hover:bg-surface-variant/50 transition-colors" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-body-lg text-body-lg">Learn</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-variant rounded-full mx-2 px-4 py-3 flex items-center gap-4 hover:bg-surface-variant/50 transition-colors" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-body-lg text-body-lg">AI Assistant</span>
+</a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full px-margin-mobile md:px-margin-desktop md:ml-80 pb-32 pt-stack-gap">
+<div class="max-w-container-max mx-auto">
+<div class="mb-stack-gap flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-2">Music Through Time</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">A chronological archive of sonic evolution. Explore the genres, artists, and cultural shifts that defined each era.</p>
+</div>
+<button class="bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors rounded-full px-6 py-3 font-body-md font-medium flex items-center gap-2 w-fit shadow-lg shadow-primary/20 hover:shadow-primary/40">
+<span class="material-symbols-outlined">shuffle</span>
+                        Discover Something New
+                    </button>
+</div>
+<!-- Decade Carousel -->
+<div class="relative -mx-margin-mobile md:mx-0 px-margin-mobile md:px-0 mb-stack-gap">
+<div class="flex overflow-x-auto gap-6 pb-8 hide-scrollbar snap-x snap-mandatory">
+<!-- 1950s Card -->
+<article class="snap-start shrink-0 w-[85vw] md:w-[600px] glass-panel rounded-xl overflow-hidden group cursor-pointer border border-outline-variant/20 hover:border-primary/50 transition-colors duration-500">
+<div class="h-64 relative overflow-hidden">
+<div class="bg-cover bg-center w-full h-full group-hover:scale-105 transition-transform duration-700" data-alt="A cinematic, high-contrast black and white photograph depicting a lively 1950s jazz club. Musicians in tailored suits playing stand-up bass and saxophone under moody spotlighting. The atmosphere is smoky, energetic, and culturally rich. High-end editorial style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDq_NAGAzcoUwsbdUzo498UQBtNm2sgehRgxArXTPOeIwZoUJPI1pLF3qL_Fpfa2KEXKT4FjbKidMq5gRUSJ7OQwVXHghS7XZm_Wwct1RBsyTj9X8op2MVtO1FiTttJIJctJcN76ffSUmx_KyzsBNs0_QEIYzagSL7dM6TL5ORedp-FJ0UG9jZBdQ6nmAQmGIeSeqalo994X1n6IAjVJxijr_gBIkn71rEBqZ4ZWSpnpvHzeYM3toRh')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/50 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-display-lg-mobile text-display-lg-mobile text-on-surface">1950s</h3>
+<p class="font-headline-sm text-headline-sm text-primary">Birth of Rock &amp; Roll</p>
+</div>
+</div>
+<div class="p-6">
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps">Rock &amp; Roll</span>
+<span class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps">Doo-Wop</span>
+<span class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps">Jazz</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3 mb-6">The post-war boom brought electrifying energy to the airwaves. Rhythm and blues evolved into Rock &amp; Roll, forever changing youth culture and breaking down racial barriers in popular music.</p>
+<div class="flex items-center justify-between border-t border-outline-variant/20 pt-4">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant border-2 border-surface border-outline-variant/30 z-30"></div>
+<div class="w-8 h-8 rounded-full bg-surface-variant border-2 border-surface border-outline-variant/30 z-20"></div>
+<div class="w-8 h-8 rounded-full bg-surface-variant border-2 border-surface border-outline-variant/30 z-10"></div>
+</div>
+<span class="text-primary flex items-center gap-1 font-body-md">Explore Era <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
+</div>
+</div>
+</article>
+<!-- 1960s Card -->
+<article class="snap-start shrink-0 w-[85vw] md:w-[600px] glass-panel rounded-xl overflow-hidden group cursor-pointer border border-outline-variant/20 hover:border-primary/50 transition-colors duration-500">
+<div class="h-64 relative overflow-hidden">
+<div class="bg-cover bg-center w-full h-full group-hover:scale-105 transition-transform duration-700" data-alt="A vibrant, slightly grainy, saturated color photograph capturing the essence of a 1960s outdoor music festival. Crowds of youth in bohemian fashion, a stage in the distance. The lighting is warm golden hour sunlight, conveying revolution, peace, and explosive cultural shift. Archival documentary aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCFRiS4VFU4d8o5-qz79qpm1lLEtR0fW6-UWwqre3FUmMoW1Z-9473VeW0Y9tloHHTBQSCcAPcOLwrwRTk3vwlLulqlbyckW_Ba6qs278jWCGAmX6DNqWOXH7hCG8LgdwYvn8CZOexbvv4eVKyCAwbmcxnDtTpgLJla5dCiXluLIw5-mykIe7PTUuQ1nTpUNl93Mx1XwG9y6gn6Ba5KdSm3AEmCzzVp2cweFkCaZWurmfOt7w6Qul8n')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/50 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-display-lg-mobile text-display-lg-mobile text-on-surface">1960s</h3>
+<p class="font-headline-sm text-headline-sm text-primary">The Counterculture</p>
+</div>
+</div>
+<div class="p-6">
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps">Psychedelic</span>
+<span class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps">Motown</span>
+<span class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps">Folk Revival</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3 mb-6">A decade of profound social upheaval echoed through music. From the British Invasion to the politically charged folk anthems and the soulful sounds of Detroit, the 60s provided the soundtrack to a revolution.</p>
+<div class="flex items-center justify-between border-t border-outline-variant/20 pt-4">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant border-2 border-surface border-outline-variant/30 z-30"></div>
+<div class="w-8 h-8 rounded-full bg-surface-variant border-2 border-surface border-outline-variant/30 z-20"></div>
+<div class="w-8 h-8 rounded-full bg-surface-variant border-2 border-surface border-outline-variant/30 z-10"></div>
+</div>
+<span class="text-primary flex items-center gap-1 font-body-md">Explore Era <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
+</div>
+</div>
+</article>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container/90 dark:bg-surface-container/90 backdrop-blur-3xl shadow-lg border-t border-primary/10">
+<ul class="flex justify-around items-center px-4 pb-4 pt-2">
+<li>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-caps text-label-caps mt-1">Explore</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-caps text-label-caps mt-1">Learn</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">self_care</span>
+<span class="font-label-caps text-label-caps mt-1">Wellness</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-caps text-label-caps mt-1">Social</span>
+</a>
+</li>
+</ul>
+</nav>
+</body></html>
