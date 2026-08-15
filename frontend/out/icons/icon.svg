@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Swargiri">
+  <defs>
+    <linearGradient id="saffron" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ff9933" />
+      <stop offset="100%" stop-color="#ffc200" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="#0c0a09" />
+  <circle cx="256" cy="256" r="150" fill="url(#saffron)" opacity="0.9" />
+  <path d="M128 320c48-64 208-64 256 0" fill="none" stroke="#fff5e6" stroke-width="22" stroke-linecap="round" />
+  <circle cx="256" cy="182" r="40" fill="#0c0a09" />
+</svg>
