@@ -1,333 +1,619 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Play, Sparkles, Disc, Radio, GraduationCap, Mic2, Building2, Clock, Music2, ShieldCheck, Heart } from "lucide-react";
-import { useAudioPlayer, SongItem } from "@/context/AudioPlayerContext";
+import { motion } from "framer-motion";
+import { SearchBar } from "@/components/SearchBar";
+import { VideoGrid } from "@/components/VideoGrid";
+import { VideoModal } from "@/components/VideoModal";
+import { SpiritualQuote } from "@/components/SpiritualQuote";
+import { MoodGenerator } from "@/components/MoodGenerator";
+import { LottieLotus } from "@/components/LottieLotus";
+import { searchYouTubeVideos, type VideoResult } from "@/lib/youtube";
+import { getTranslation } from "@/lib/i18n";
+import {
+  Sparkles,
+  TrendingUp,
+  Music,
+  Heart,
+  Play,
+  Star,
+  Library,
+  Search,
+  BookOpen,
+  Users,
+  Radio,
+  Calendar,
+  Mic,
+  Wand2,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const categories = [
+  { id: "trending", label: "Latest", color: "from-orange-500 to-red-500" },
+  { id: "vitthal", label: "Vitthal", color: "from-blue-500 to-indigo-500" },
+  { id: "shiva", label: "Shiva", color: "from-purple-500 to-blue-500" },
+  { id: "ganesha", label: "Ganesha", color: "from-pink-500 to-orange-500" },
+  { id: "ram", label: "Ram", color: "from-orange-400 to-yellow-600" },
+  { id: "aarti", label: "Aarti", color: "from-yellow-400 to-orange-400" },
+];
+
+const moodCategories = [
+  {
+    title: "Morning Bhakti",
+    description: "Soft chants for sunrise focus",
+    tag: "Sunrise",
+  },
+  {
+    title: "Evening Aarti",
+    description: "Temple-inspired evening rituals",
+    tag: "Twilight",
+  },
+  {
+    title: "Meditation",
+    description: "Slow ragas and calm vocals",
+    tag: "Stillness",
+  },
+  {
+    title: "Devotion",
+    description: "High-energy kirtans and bhajans",
+    tag: "Bhakti",
+  },
+  {
+    title: "Stress Relief",
+    description: "Breathing guides with music",
+    tag: "Calm",
+  },
+];
+
+const pillars = [
+  {
+    title: "streamTitle",
+    description: "streamDesc",
+    icon: Music,
+  },
+  {
+    title: "learnTitle",
+    description: "learnDesc",
+    icon: BookOpen,
+  },
+  {
+    title: "createTitle",
+    description: "createDesc",
+    icon: Mic,
+  },
+];
+
+const kirtankars = [
+  {
+    name: "Nitin Maharaj Bangar",
+    style: "Varkari Kirtan",
+    followers: "142k",
+    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=400",
+  },
+  {
+    name: "Shriya Gokhale",
+    style: "Abhang and Bhajan",
+    followers: "98k",
+    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=400",
+  },
+  {
+    name: "Aarav Pandit",
+    style: "Harmonium Lead",
+    followers: "76k",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
+  },
+  {
+    name: "Meera Kulkarni",
+    style: "Meditative Bhakti",
+    followers: "61k",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
+  },
+];
+
+const templePlaylists = [
+  {
+    title: "Pandharpur Wari",
+    description: "Vitthal abhangs for the spiritual journey.",
+  },
+  {
+    title: "Kashi Vishwanath",
+    description: "Shiva stotras and aarti from Varanasi.",
+  },
+  {
+    title: "Tirupati Darshan",
+    description: "Venkateswara chants with temple percussion.",
+  },
+];
+
+const liveEvents = [
+  {
+    title: "Live Kirtan from Pandharpur",
+    host: "Swargiri Live",
+    time: "Today 7:30 PM",
+    type: "Live Stream",
+  },
+  {
+    title: "Hanuman Chalisa Marathon",
+    host: "Bhakti Studio",
+    time: "Friday 6:00 AM",
+    type: "Community Event",
+  },
+  {
+    title: "Raga Bhairav Sunrise Aarti",
+    host: "Temple Network",
+    time: "Sunday 5:30 AM",
+    type: "Temple Stream",
+  },
+];
+
+const ragaFilters = {
+  raga: ["Yaman", "Bhairav", "Bhairavi", "Darbari", "Bageshri"],
+  taal: ["Teentaal", "Keharwa", "Dadra", "Rupak"],
+  tempo: ["Vilambit", "Madhya", "Drut"],
+  instrument: ["Harmonium", "Tabla", "Mridang", "Kartal"],
+};
 
 export default function HomePage() {
-  const { playSong } = useAudioPlayer();
-  const [selectedCategory, setSelectedCategory] = useState<string>("All Devotional");
+  const [activeCategory, setActiveCategory] = useState("trending");
+  const [videos, setVideos] = useState<VideoResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<VideoResult | null>(null);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentLang, setCurrentLang] = useState("en");
 
-  const devotionalCategories = [
-    "All Devotional",
-    "Vitthal Bhajans",
-    "Krishna Bhajans",
-    "Shiv Stotrams",
-    "Ram Bhajans",
-    "Ganesh Aartis",
-    "Varkari Kirtans",
-    "Indian Classical Ragas",
-    "Meditation & Om Chants"
-  ];
+  const fetchVideos = async (query: string, isSearch: boolean = false) => {
+    setIsLoading(true);
+    setIsSearchActive(isSearch);
+    setSearchQuery(query);
+    const results = await searchYouTubeVideos(query);
+    setVideos(results);
+    setIsLoading(false);
+  };
 
-  const featuredDevotionalSongs: SongItem[] = [
-    {
-      id: "song-1",
-      title: "Shiv Tandav Stotram",
-      artist: "Ravan (Traditional)",
-      album: "Sacred Stotrams",
-      genre: "Devotional",
-      language: "Sanskrit",
-      era: "Historical",
-      raga: "Bhairavi",
-      taal: "Keherwa",
-      audioUrl: "/audio/sample-bhajan.mp3",
-      coverImage: "https://images.unsplash.com/photo-1545128485-c400e7702796?w=600&auto=format&fit=crop&q=80",
-      duration: 372,
-      lyrics: "Jataatavigalajjala pravahapavitasthale...\nGaleavalambya lambitam bhujangatungamalikam...",
-      copyrightStatus: "Public Domain",
-      rightsHolder: "Traditional Heritage"
-    },
-    {
-      id: "song-2",
-      title: "Majhe Maher Pandhari",
-      artist: "Pt. Bhimsen Joshi",
-      album: "Pandharpur Varkari Abhangas",
-      genre: "Devotional",
-      language: "Marathi",
-      era: "Historical",
-      raga: "Yaman",
-      taal: "Bhajani",
-      audioUrl: "https://ia800201.us.archive.org/13/items/AbhangasByPt.BhimsenJoshi/MajheMaherPandhari.mp3",
-      coverImage: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80",
-      duration: 405,
-      lyrics: "Majhe maher pandhari aahe bhivareche teeri...",
-      copyrightStatus: "Public Domain",
-      rightsHolder: "Varkari Heritage Archive"
-    },
-    {
-      id: "song-3",
-      title: "Achyutam Keshavam Krishna Damodaram",
-      artist: "Traditional Chants",
-      album: "Vrindavan Devotional Chants",
-      genre: "Devotional",
-      language: "Sanskrit",
-      era: "Traditional",
-      raga: "Desh",
-      audioUrl: "https://ia801509.us.archive.org/17/items/AchyutamKeshavam/AchyutamKeshavam.mp3",
-      coverImage: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=600&auto=format&fit=crop&q=80",
-      duration: 330,
-      lyrics: "Achyutam Keshavam Krishna Damodaram...\nRama Narayanam Janaki Vallabham...",
-      copyrightStatus: "Public Domain",
-      rightsHolder: "Sacred Heritage"
-    },
-    {
-      id: "song-4",
-      title: "Roop Pahata Lochani",
-      artist: "Lata Mangeshkar",
-      album: "Abhanga Gatha",
-      genre: "Devotional",
-      language: "Marathi",
-      era: "Traditional",
-      raga: "Kafi",
-      taal: "Bhajani",
-      audioUrl: "https://ia800300.us.archive.org/4/items/LataMangeshkarAbhangs/RoopPahataLochani.mp3",
-      coverImage: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?w=600&auto=format&fit=crop&q=80",
-      duration: 320,
-      lyrics: "Roop pahata lochani sukh jhale ho sajani...",
-      copyrightStatus: "Licensed",
-      rightsHolder: "Bhakti Sangeet"
-    },
-    {
-      id: "song-5",
-      title: "Raag Yaman Morning Meditation",
-      artist: "Ustad Shahid Parvez",
-      album: "Morning Ragas Vol. 1",
-      genre: "Indian Classical",
-      language: "Instrumental",
-      era: "Classical",
-      raga: "Yaman",
-      taal: "Teental",
-      audioUrl: "https://ia800502.us.archive.org/1/items/KishoriAmonkarDevotional/AvaghaRangEkZala.mp3",
-      coverImage: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80",
-      duration: 420,
-      lyrics: "Instrumental Sitar Performance",
-      copyrightStatus: "Creator Authorized",
-      rightsHolder: "Swargiri Classical"
-    },
-    {
-      id: "song-6",
-      title: "Om Namah Shivaya (Calm Meditation)",
-      artist: "Suresh Wadkar",
-      album: "Spiritual Pranayama",
-      genre: "Meditation & Om Chants",
-      language: "Sanskrit",
-      era: "Modern",
-      audioUrl: "https://ia800301.us.archive.org/5/items/SureshWadkarShivBhajans/OmNamahShivaya.mp3",
-      coverImage: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&auto=format&fit=crop&q=80",
-      duration: 720,
-      copyrightStatus: "Public Domain",
-      rightsHolder: "Dhyan Wellness"
+  useEffect(() => {
+    if (!isSearchActive) {
+      fetchVideos(activeCategory);
     }
-  ];
+  }, [activeCategory, isSearchActive]);
 
-  const filteredSongs = selectedCategory === "All Devotional"
-    ? featuredDevotionalSongs
-    : featuredDevotionalSongs.filter((s) => 
-        s.genre.toLowerCase().includes(selectedCategory.toLowerCase()) ||
-        s.title.toLowerCase().includes(selectedCategory.toLowerCase())
-      );
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedLang = localStorage.getItem("swargiri_lang") || "en";
+      setCurrentLang(savedLang);
+
+      const handleLanguageChange = () => {
+        const lang = localStorage.getItem("swargiri_lang") || "en";
+        setCurrentLang(lang);
+      };
+
+      window.addEventListener("languageChanged", handleLanguageChange);
+      return () => window.removeEventListener("languageChanged", handleLanguageChange);
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#131313] text-[#e5e2e1]">
-      {/* Hero Banner Section for Devotional Platform */}
-      <section className="relative py-16 sm:py-24 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#f2ca50]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#201f1f] border border-[#f2ca50]/30 text-xs text-[#f2ca50] font-semibold">
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
-              <span>Sacred Sanctuary of Bhajans, Kirtans & Spiritual Music</span>
+    <div className="flex flex-col min-h-screen">
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+        <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <div className="mx-auto w-24 h-24 md:w-28 md:h-28">
+              <LottieLotus />
             </div>
-            <h1 className="text-4xl sm:text-6xl font-extrabold font-heading text-white leading-tight tracking-tight">
-              Divine Bhajans. <br />
-              Soulful Kirtans. <span className="text-gold-gradient">Eternal Peace.</span>
+            <div className="flex items-center gap-3 px-6 py-2 rounded-full glass border-primary-purple/20 text-xs font-black tracking-[0.3em] uppercase text-primary-purple mb-8">
+              <Sparkles className="h-4 w-4" />
+              {getTranslation(currentLang, "hero", "tag")}
+            </div>
+
+            <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-tight italic">
+              {getTranslation(currentLang, "hero", "title1")}<span className="text-saffron">{getTranslation(currentLang, "hero", "title2")}</span>
             </h1>
-            <p className="text-base sm:text-lg text-[#d0c5af] leading-relaxed max-w-2xl">
-              Immerse yourself in authentic Vitthal, Krishna, Shiv, Ram & Ganesh Bhajans, Varkari Abhangas, Haripath, Kirtan discourses, and Indian Classical Ragas.
+
+            <p className="text-xl md:text-2xl text-foreground/40 max-w-2xl mx-auto leading-relaxed font-light mb-12">
+              {getTranslation(currentLang, "hero", "subtitle")}
             </p>
-            <div className="flex flex-wrap gap-4 pt-2">
+
+            <SearchBar onSearch={(q) => fetchVideos(q, true)} isLoading={isLoading} />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Platform Pillars */}
+      <section className="py-14 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+          {pillars.map((pillar) => (
+            <div key={pillar.title} className="glass p-8 rounded-[2.5rem] border-none space-y-4">
+              <div className="h-12 w-12 rounded-2xl bg-saffron/10 text-saffron flex items-center justify-center">
+                <pillar.icon className="h-6 w-6" />
+              </div>
+              <h3 className="text-xl font-black uppercase tracking-tight italic">{pillar.title}</h3>
+              <p className="text-sm text-foreground/40 font-light italic">{pillar.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Mood Categories */}
+      <section className="py-8 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] font-black text-foreground/40 mb-6 flex-wrap">
+            <Wand2 className="h-4 w-4 text-saffron shrink-0" />
+            Mood Based Categories
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {moodCategories.map((mood) => (
+              <div key={mood.title} className="glass p-6 rounded-[2rem] border-none space-y-3">
+                <div className="text-[10px] uppercase tracking-[0.3em] font-black text-saffron">{mood.tag}</div>
+                <h3 className="text-lg font-black italic uppercase tracking-tight">{mood.title}</h3>
+                <p className="text-xs text-foreground/40 font-light italic">{mood.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Navigation */}
+      <section className="sticky top-20 z-40 bg-background/60 backdrop-blur-xl py-6 px-6 border-y border-foreground/5 shadow-2xl">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2 text-foreground/40 font-bold uppercase text-[10px] tracking-[0.2em]">
+            <Library className="h-4 w-4" />
+            {isSearchActive ? "Search Results" : "Select Collection"}
+          </div>
+
+          <div className="flex flex-wrap gap-3 justify-center">
+            {isSearchActive ? (
               <button
-                onClick={() => playSong(featuredDevotionalSongs[0], featuredDevotionalSongs)}
-                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#f2ca50] to-[#d4af37] text-black font-bold text-sm shadow-xl hover:scale-105 transition flex items-center gap-2"
+                onClick={() => setIsSearchActive(false)}
+                className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-white/5 border border-white/10 text-xs font-black uppercase tracking-widest text-primary-purple hover:bg-white/10 transition-all transform hover:scale-105"
               >
-                <Play className="w-4 h-4 fill-current ml-0.5" /> Listen To Sacred Bhajans
+                <Library className="h-4 w-4" />
+                Back to Collections
               </button>
-              <Link
-                href="/bhajans"
-                className="px-6 py-3.5 rounded-xl bg-[#201f1f] hover:bg-[#2a2a2a] border border-white/10 text-white font-semibold text-sm transition flex items-center gap-2"
-              >
-                <Music2 className="w-4 h-4 text-[#f2ca50]" /> Explore All Deity Bhajans
+            ) : (
+              categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={cn(
+                    "px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-500 transform hover:scale-110 active:scale-95 border-2",
+                    activeCategory === cat.id
+                      ? "bg-saffron text-stone-950 border-transparent shadow-[0_10px_30px_rgba(255,153,51,0.3)]"
+                      : "glass border-foreground/5 text-foreground/40 hover:border-foreground/20"
+                  )}
+                >
+                  {cat.label}
+                </button>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Content Grid */}
+      <section className="max-w-7xl mx-auto px-6 py-20 w-full">
+        <div className="flex items-center gap-6 mb-16 px-4">
+          <div className="p-4 rounded-3xl bg-primary-purple shadow-xl shadow-primary-purple/20">
+            {isSearchActive ? <Search className="text-white h-7 w-7" /> : <TrendingUp className="text-white h-7 w-7" />}
+          </div>
+          <div>
+            <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter leading-none mb-1 flex-wrap">
+              {isSearchActive ? (
+                <>Found <span className="text-gradient hover:break-all">"{searchQuery}"</span></>
+              ) : (
+                <>Top <span className="text-gradient">{activeCategory}</span></>
+              )}
+            </h2>
+            <p className="text-sm text-foreground/30 font-bold tracking-widest uppercase italic">
+              {isSearchActive ? "Showing results for your search" : "The essence of devotion."}
+            </p>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="aspect-video glass rounded-[2.5rem] animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <VideoGrid videos={videos} onVideoClick={setSelectedVideo} />
+        )}
+      </section>
+
+      {/* Popular Kirtankars */}
+      <section className="py-24 px-6 bg-foreground/[0.02] border-y border-foreground/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4 mb-10">
+            <div className="p-3 rounded-2xl bg-saffron/10 text-saffron shrink-0">
+              <Users className="h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tight">Popular Kirtankars</h2>
+              <p className="text-sm text-foreground/40 uppercase tracking-widest font-bold">Follow and learn from leading voices</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {kirtankars.map((artist) => (
+              <div key={artist.name} className="glass rounded-[2.5rem] overflow-hidden border-none group">
+                <div className="relative h-48">
+                  <img src={artist.image} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={artist.name} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                </div>
+                <div className="p-6 space-y-3">
+                  <h3 className="text-lg font-black uppercase tracking-tight italic">{artist.name}</h3>
+                  <p className="text-xs text-foreground/40 uppercase tracking-widest font-bold">{artist.style}</p>
+                  <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-foreground/40">
+                    <span>{artist.followers} followers</span>
+                    <button className="text-saffron hover:underline">Follow</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Temple Traditions */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] font-black text-foreground/40 flex-wrap">
+              <Music className="h-4 w-4 text-saffron shrink-0" />
+              Temple Traditions
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tight">
+              Playlists Inspired by Sacred Spaces
+            </h2>
+            <p className="text-lg text-foreground/40 font-light italic">
+              Curated collections rooted in devotional traditions from across India.
+            </p>
+            <div className="flex gap-4 flex-wrap">
+              <Link href="/" className="px-8 py-4 rounded-3xl bg-saffron text-stone-950 font-black uppercase tracking-widest text-center flex-1 sm:flex-none">
+                Explore Playlists
+              </Link>
+              <Link href="/learn" className="px-8 py-4 rounded-3xl border border-foreground/10 font-black uppercase tracking-widest text-foreground/60 hover:bg-white/5 text-center flex-1 sm:flex-none">
+                Learn the Ragas
               </Link>
             </div>
           </div>
-
-          {/* Right Spotlight Card */}
-          <div className="lg:col-span-5">
-            <div className="relative rounded-2xl bg-[#1c1b1b] border border-[#f2ca50]/20 p-6 shadow-2xl overflow-hidden group">
-              <div className="relative h-64 rounded-xl overflow-hidden mb-4">
-                <img
-                  src={featuredDevotionalSongs[0].coverImage}
-                  alt={featuredDevotionalSongs[0].title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] uppercase font-bold text-[#f2ca50]">
-                  Devotional Spotlight
-                </span>
-                <button
-                  onClick={() => playSong(featuredDevotionalSongs[0], featuredDevotionalSongs)}
-                  className="absolute bottom-4 right-4 p-4 rounded-full bg-[#f2ca50] text-black shadow-xl hover:scale-110 transition"
-                >
-                  <Play className="w-6 h-6 fill-current ml-0.5" />
-                </button>
-              </div>
-              <h3 className="text-xl font-bold font-heading text-white">{featuredDevotionalSongs[0].title}</h3>
-              <p className="text-sm text-[#f2ca50] mt-1">{featuredDevotionalSongs[0].artist}</p>
-              <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/10 text-xs text-gray-400">
-                <span>Raga: {featuredDevotionalSongs[0].raga} • {featuredDevotionalSongs[0].taal}</span>
-                <span className="flex items-center gap-1 text-[#d0c5af]">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#f2ca50]" /> Sacred Heritage
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Devotional Category Pills */}
-      <section className="px-4 sm:px-8 max-w-7xl mx-auto mb-12">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold font-heading text-white flex items-center gap-2">
-            <Disc className="w-5 h-5 text-[#f2ca50]" /> Devotional Categories
-          </h2>
-        </div>
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 scrollbar-none">
-          {devotionalCategories.map((c) => (
-            <button
-              key={c}
-              onClick={() => setSelectedCategory(c)}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition border ${
-                selectedCategory === c
-                  ? "bg-gradient-to-r from-[#f2ca50] to-[#d4af37] text-black border-transparent shadow-lg"
-                  : "bg-[#1c1b1b] text-gray-300 border-white/10 hover:border-[#f2ca50]/40 hover:text-white"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* Devotional Song Cards Grid */}
-      <section className="px-4 sm:px-8 max-w-7xl mx-auto mb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredSongs.map((song) => (
-            <div
-              key={song.id}
-              className="bg-[#1c1b1b] border border-white/5 hover:border-[#f2ca50]/30 rounded-2xl p-4 transition duration-300 hover:-translate-y-1 shadow-lg group flex flex-col justify-between"
-            >
-              <div>
-                <div className="relative h-44 rounded-xl overflow-hidden mb-3">
-                  <img
-                    src={song.coverImage}
-                    alt={song.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                  />
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition" />
-                  <span className="absolute top-2 left-2 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md text-[10px] font-bold text-[#f2ca50]">
-                    {song.genre}
-                  </span>
-                  <button
-                    onClick={() => playSong(song, featuredDevotionalSongs)}
-                    className="absolute bottom-3 right-3 p-3 rounded-full bg-[#f2ca50] text-black shadow-lg opacity-90 group-hover:opacity-100 group-hover:scale-110 transition"
-                  >
-                    <Play className="w-4 h-4 fill-current ml-0.5" />
-                  </button>
+          <div className="space-y-4">
+            {templePlaylists.map((playlist) => (
+              <div key={playlist.title} className="glass p-6 rounded-[2.5rem] border-none flex items-center gap-6">
+                <div className="h-14 w-14 rounded-2xl bg-saffron/10 text-saffron flex items-center justify-center shrink-0">
+                  <Play className="h-5 w-5" />
                 </div>
-                <h4 className="text-base font-bold text-white group-hover:text-[#f2ca50] transition truncate">
-                  {song.title}
-                </h4>
-                <p className="text-xs text-gray-400 mt-1">{song.artist} • {song.language}</p>
+                <div>
+                  <h3 className="text-xl font-black uppercase italic tracking-tight">{playlist.title}</h3>
+                  <p className="text-sm text-foreground/40 font-light italic">{playlist.description}</p>
+                </div>
               </div>
-
-              <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-[#d0c5af]">
-                <span>{song.album}</span>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-[#2a2a2a] text-[#f2ca50]">
-                  {song.copyrightStatus}
-                </span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Devotional Ecosystem Hub Cards (Bhajans, Kirtans, Learning, Meditation) */}
-      <section className="px-4 sm:px-8 max-w-7xl mx-auto mb-20">
-        <div className="border-t border-white/10 pt-12">
-          <h2 className="text-2xl font-bold font-heading text-white mb-8 text-center sm:text-left">
-            Devotional Experience Hubs
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Deity Bhajans */}
-            <Link
-              href="/bhajans"
-              className="p-6 rounded-2xl bg-[#1c1b1b] border border-white/10 hover:border-[#f2ca50]/40 transition group hover:-translate-y-1 shadow-xl"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#201f1f] flex items-center justify-center mb-4 text-[#f2ca50] group-hover:scale-110 transition">
-                <Music2 className="w-6 h-6" />
+      {/* Raga Based Search */}
+      <section className="py-24 px-6 bg-foreground/[0.02] border-y border-foreground/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="p-3 rounded-2xl bg-primary-purple/10 text-primary-purple shrink-0">
+              <Radio className="h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tight">Raga Based Search</h2>
+              <p className="text-sm text-foreground/40 uppercase tracking-widest font-bold">Filter by raga, taal, tempo, instrument</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {Object.entries(ragaFilters).map(([label, items]) => (
+              <div key={label} className="glass p-6 rounded-[2.5rem] border-none space-y-4">
+                <h3 className="text-sm font-black uppercase tracking-widest text-foreground/50">{label}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {items.map((item) => (
+                    <span key={item} className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-white/5">
+                      {item}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-[#f2ca50] transition">Deity Bhajans</h3>
-              <p className="text-xs text-gray-400 mt-2 leading-relaxed">
-                Collection of Vitthal, Krishna, Shiv, Ram & Ganesh Bhajans & Aartis.
-              </p>
-            </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Varkari Kirtans */}
-            <Link
-              href="/kirtans"
-              className="p-6 rounded-2xl bg-[#1c1b1b] border border-white/10 hover:border-[#f2ca50]/40 transition group hover:-translate-y-1 shadow-xl"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#201f1f] flex items-center justify-center mb-4 text-[#f2ca50] group-hover:scale-110 transition">
-                <Mic2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-[#f2ca50] transition">Varkari Kirtans</h3>
-              <p className="text-xs text-gray-400 mt-2 leading-relaxed">
-                Live and recorded Kirtan discourses, Abhangwani, and Haripath chants.
-              </p>
-            </Link>
+      {/* Live Events */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4 mb-10">
+            <div className="p-3 rounded-2xl bg-marigold/10 text-marigold shrink-0">
+              <Calendar className="h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tight">Live Kirtan Events</h2>
+              <p className="text-sm text-foreground/40 uppercase tracking-widest font-bold">Join streaming sessions and temple events</p>
+            </div>
+          </div>
 
-            {/* Devotional Academy */}
-            <Link
-              href="/learn"
-              className="p-6 rounded-2xl bg-[#1c1b1b] border border-white/10 hover:border-[#f2ca50]/40 transition group hover:-translate-y-1 shadow-xl"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#201f1f] flex items-center justify-center mb-4 text-[#f2ca50] group-hover:scale-110 transition">
-                <GraduationCap className="w-6 h-6" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {liveEvents.map((event) => (
+              <div key={event.title} className="glass p-6 rounded-[2.5rem] border-none space-y-4">
+                <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.3em] text-foreground/40 font-black">
+                  <span>{event.type}</span>
+                  <span className="text-saffron">Live</span>
+                </div>
+                <h3 className="text-lg font-black uppercase italic tracking-tight">{event.title}</h3>
+                <p className="text-xs text-foreground/40 font-bold uppercase tracking-widest">{event.host}</p>
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <span className="text-sm font-bold text-foreground/60">{event.time}</span>
+                  <button className="text-xs font-black uppercase tracking-widest text-saffron hover:underline">Set Reminder</button>
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-[#f2ca50] transition">Harmonium & Tabla Academy</h3>
-              <p className="text-xs text-gray-400 mt-2 leading-relaxed">
-                Learn Bhajan singing, Harmonium, Tabla, and Raga compositions.
-              </p>
-            </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Calm & Meditation */}
-            <Link
-              href="/calm"
-              className="p-6 rounded-2xl bg-[#1c1b1b] border border-white/10 hover:border-[#f2ca50]/40 transition group hover:-translate-y-1 shadow-xl"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#201f1f] flex items-center justify-center mb-4 text-[#f2ca50] group-hover:scale-110 transition">
-                <Building2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-[#f2ca50] transition">Calm & Meditation</h3>
-              <p className="text-xs text-gray-400 mt-2 leading-relaxed">
-                Om Chanting, Pranayama audio, and peaceful spiritual soundscapes.
-              </p>
+      {/* Learning and Creator CTA */}
+      <section className="py-24 px-6 bg-foreground/[0.02] border-y border-foreground/5">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="glass p-10 rounded-[3rem] border-none space-y-6">
+            <div className="h-12 w-12 rounded-2xl bg-saffron/10 text-saffron flex items-center justify-center">
+              <BookOpen className="h-6 w-6" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tight">Swargiri Academy</h2>
+            <p className="text-base text-foreground/40 font-light italic">
+              Courses for kirtan training, harmonium, tabla, mridang, kartal, and devotional music theory.
+            </p>
+            <Link href="/learn" className="inline-flex px-8 py-4 rounded-3xl bg-saffron text-stone-950 font-black uppercase tracking-widest text-center">
+              Browse Courses
+            </Link>
+          </div>
+          <div className="glass p-10 rounded-[3rem] border-none space-y-6">
+            <div className="h-12 w-12 rounded-2xl bg-primary-purple/10 text-primary-purple flex items-center justify-center">
+              <Mic className="h-6 w-6" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tight">Creator Dashboard</h2>
+            <p className="text-base text-foreground/40 font-light italic">
+              Upload bhajans, kirtans, pravachans, manage lyrics, and track analytics in real time.
+            </p>
+            <Link href="/dashboard" className="inline-flex px-8 py-4 rounded-3xl border border-foreground/10 font-black uppercase tracking-widest text-foreground/60 hover:bg-white/5 text-center">
+              Open Dashboard
             </Link>
           </div>
         </div>
       </section>
+
+      {/* Stress Relief */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] font-black text-foreground/40 flex-wrap">
+              <Heart className="h-4 w-4 text-saffron shrink-0" />
+              Stress Relief Mode
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tight">Meditation and Calm</h2>
+            <p className="text-lg text-foreground/40 font-light italic">
+              Meditation bhajans, instrumental devotionals, and guided breathing for mental wellness.
+            </p>
+            <Link href="/calm" className="inline-flex px-8 py-4 rounded-3xl bg-saffron text-stone-950 font-black uppercase tracking-widest text-center flex-wrap">
+              Enter Calm Mode
+            </Link>
+          </div>
+          <div className="glass p-10 rounded-[3rem] border-none space-y-6 flex flex-col items-start w-full">
+            <div className="flex items-center justify-between w-full">
+              <span className="text-xs uppercase tracking-[0.3em] font-black text-foreground/40">Featured Session</span>
+              <Star className="h-5 w-5 text-marigold" />
+            </div>
+            <h3 className="text-2xl font-black uppercase italic tracking-tight">10-Minute Relaxation Playlist</h3>
+            <p className="text-sm text-foreground/40 font-light italic">
+              Gentle ragas with a guided breath timer to support teams and individuals.
+            </p>
+            <button className="px-8 py-4 rounded-3xl border border-foreground/10 font-black uppercase tracking-widest text-foreground/60 hover:bg-white/5 flex-wrap">
+              Add to Library
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <MoodGenerator />
+      <SpiritualQuote />
+
+      {/* About Us */}
+      <section id="about" className="py-28 px-6 bg-foreground/[0.02] border-y border-foreground/5">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] font-black text-foreground/40 flex-wrap">
+              <Sparkles className="h-4 w-4 text-saffron shrink-0" />
+              About Swargiri
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tight">
+              A Digital Sanctuary for Devotion
+            </h2>
+            <p className="text-lg text-foreground/40 font-light italic">
+              Swargiri is built to preserve sacred traditions while delivering a premium modern experience for
+              devotional music. We combine streaming, learning, and community to help listeners find peace,
+              creators grow their impact, and students master the art of bhakti.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/about"
+                className="px-8 py-4 rounded-3xl bg-saffron text-stone-950 font-black uppercase tracking-widest flex-1 sm:flex-none text-center"
+              >
+                Learn More
+              </Link>
+              <Link
+                href="/dashboard"
+                className="px-8 py-4 rounded-3xl border border-foreground/10 font-black uppercase tracking-widest text-foreground/60 hover:bg-white/5 flex-1 sm:flex-none text-center"
+              >
+                Creator Hub
+              </Link>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[
+              {
+                title: "Mission",
+                description: "Elevate devotion with high-quality kirtans, bhajans, and learning paths.",
+              },
+              {
+                title: "Culture",
+                description: "Celebrate regional traditions, temple rituals, and classical raga heritage.",
+              },
+              {
+                title: "Impact",
+                description: "Support inner calm through mindful listening and stress relief journeys.",
+              },
+              {
+                title: "Community",
+                description: "Connect seekers, students, and kirtankars through live events and dialogue.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="glass p-6 rounded-[2.5rem] border-none space-y-3">
+                <div className="text-[10px] uppercase tracking-[0.3em] font-black text-saffron">
+                  {item.title}
+                </div>
+                <p className="text-sm text-foreground/40 font-light italic">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Promise Section */}
+      <section className="py-40 px-6 flex justify-center">
+        <div className="glass p-10 md:p-16 max-w-4xl text-center rounded-[3rem] md:rounded-[5rem] border-none shadow-[0_0_150px_rgba(255,153,51,0.1)] relative w-full">
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 p-6 bg-gradient-to-br from-saffron to-marigold rounded-[2rem] shadow-2xl">
+            <Heart className="h-10 w-10 text-stone-950 fill-stone-950 animate-bounce" />
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-8 italic">Pure Devotion. <br className="md:hidden" /><span className="text-saffron">Zero Effort.</span></h2>
+          <p className="text-lg md:text-2xl text-foreground/40 leading-relaxed max-w-2xl mx-auto font-light mb-12 italic">
+            "We believe spiritual music should be accessible to everyone, everywhere. No ads, no signups, just the melody of the soul."
+          </p>
+          <div className="flex flex-wrap justify-center gap-8">
+            <div className="flex items-center gap-4 group">
+              <div className="h-12 w-12 rounded-2xl glass flex items-center justify-center group-hover:bg-saffron/20 transition-all shrink-0">
+                <Play className="h-6 w-6 text-saffron" />
+              </div>
+              <span className="text-sm font-black uppercase tracking-widest">Instant Play</span>
+            </div>
+            <div className="flex items-center gap-4 group">
+              <div className="h-12 w-12 rounded-2xl glass flex items-center justify-center group-hover:bg-marigold/20 transition-all shrink-0">
+                <Star className="h-6 w-6 text-marigold" />
+              </div>
+              <span className="text-sm font-black uppercase tracking-widest">Premium HD</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
     </div>
   );
 }

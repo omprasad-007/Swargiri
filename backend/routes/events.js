@@ -1,31 +1,14 @@
 import { Router } from "express";
-import Event from "../models/Event.js";
+import { buildCrudController } from "../controllers/crud.js";
+import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
+const controller = buildCrudController("events");
 
-// GET /api/events
-router.get("/", async (req, res, next) => {
-  try {
-    const { status = "upcoming" } = req.query;
-    const events = await Event.find({ status }).sort({ scheduledAt: 1 });
-    res.json({ success: true, count: events.length, data: events });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// POST /api/events/:id/reminder
-router.post("/:id/reminder", async (req, res, next) => {
-  try {
-    const event = await Event.findByIdAndUpdate(
-      req.params.id,
-      { $inc: { remindersCount: 1 } },
-      { new: true }
-    );
-    res.json({ success: true, message: "Reminder set successfully", data: event });
-  } catch (error) {
-    next(error);
-  }
-});
+router.get("/", controller.list);
+router.post("/", requireAuth, controller.create);
+router.get("/:id", controller.getById);
+router.patch("/:id", requireAuth, controller.update);
+router.delete("/:id", requireAuth, controller.remove);
 
 export default router;

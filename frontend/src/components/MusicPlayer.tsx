@@ -1,201 +1,204 @@
 "use client";
 
-import React, { useState } from "react";
-import { useAudioPlayer } from "../context/AudioPlayerContext";
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Shuffle,
-  Repeat,
-  Volume2,
-  VolumeX,
-  FileText,
-  ListMusic,
-  Heart,
-  Gauge
-} from "lucide-react";
+import React, { useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
+import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, ListMusic, Maximize2 } from "lucide-react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
-export const MusicPlayer: React.FC = () => {
-  const {
-    currentSong,
-    isPlaying,
-    currentTime,
-    duration,
-    volume,
-    playbackRate,
-    isShuffle,
-    repeatMode,
-    favorites,
-    togglePlayPause,
-    seek,
-    nextTrack,
-    prevTrack,
-    toggleShuffle,
-    toggleRepeat,
-    setVolumeLevel,
-    setSpeedRate,
-    toggleFavorite,
-    toggleLyricsModal,
-    toggleQueueDrawer
-  } = useAudioPlayer();
+const DEFAULT_SONG = {
+  id: "vitthal-geete",
+  title: "Vitthal Geete Marathi",
+  artist: "Sumeet Music",
+  thumbnail: "https://img.youtube.com/vi/W4-pYVb29p4/mqdefault.jpg",
+  durationSeconds: 255,
+};
 
-  const [showSpeedMenu, setShowSpeedMenu] = useState(false);
+function formatTime(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = Math.floor(totalSeconds % 60);
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
 
-  if (!currentSong) return null;
+export function MusicPlayer() {
+  const [playerState, setPlayerState] = useLocalStorage("swargiri_player_state", {
+    isPlaying: false,
+    progress: 35,
+    currentSong: DEFAULT_SONG,
+  });
 
-  const formatTime = (secs: number) => {
-    if (isNaN(secs)) return "0:00";
-    const m = Math.floor(secs / 60);
-    const s = Math.floor(secs % 60);
-    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  const [favorites, setFavorites] = useLocalStorage<string[]>("swargiri_favorites", []);
+  const [recentlyPlayed, setRecentlyPlayed] = useLocalStorage<typeof DEFAULT_SONG[]>(
+    "swargiri_recently_played",
+    []
+  );
+
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  const { isPlaying, progress, currentSong } = playerState;
+
+  useEffect(() => {
+    // Initialize audio element if not exists
+    if (!audioRef.current) {
+      audioRef.current = new Audio("/audio/sample-bhajan.mp3"); // Using a sample local audio fallback for now if no src
+    }
+  }, []);
+
+  useEffect(() => {
+    setRecentlyPlayed((prev) => {
+      const filtered = prev.filter((song) => song.id !== currentSong.id);
+      return [currentSong, ...filtered].slice(0, 8);
+    });
+    
+    // Reset and play new song when currentSong changes
+    if (audioRef.current) {
+      // audioRef.current.src = currentSong.audioUrl || "/audio/sample-bhajan.mp3";
+      audioRef.current.currentTime = 0;
+      if (isPlaying) {
+        audioRef.current.play().catch(console.error);
+      }
+    }
+  }, [currentSong, setRecentlyPlayed]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play().catch(console.error);
+      } else {
+        audioRef.current.pause();
+      }
+    }
+
+    if (!isPlaying) return;
+
+    const interval = setInterval(() => {
+      if (audioRef.current) {
+         const current = audioRef.current.currentTime;
+         const duration = audioRef.current.duration || currentSong.durationSeconds || 1;
+         const nextProgress = (current / duration) * 100;
+         
+         setPlayerState((prev) => {
+           if (nextProgress >= 100) {
+             return { ...prev, progress: 0, isPlaying: false };
+           }
+           return { ...prev, progress: nextProgress };
+         });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, setPlayerState, currentSong.durationSeconds]);
+
+  const isFavorite = favorites.includes(currentSong.id);
+  const durationSeconds = currentSong.durationSeconds ?? DEFAULT_SONG.durationSeconds;
+  
+  const currentTime = useMemo(() => {
+    if (audioRef.current && !isNaN(audioRef.current.currentTime)) {
+       return Math.floor(audioRef.current.currentTime);
+    }
+    return Math.floor((durationSeconds * progress) / 100);
+  }, [progress, durationSeconds]);
+
+  const toggleFavorite = () => {
+    setFavorites((prev) => {
+      if (prev.includes(currentSong.id)) {
+        return prev.filter((id) => id !== currentSong.id);
+      }
+      return [currentSong.id, ...prev].slice(0, 50);
+    });
   };
 
-  const isFav = currentSong ? favorites.includes(currentSong.id) : false;
+  const togglePlay = () => {
+    setPlayerState((prev) => ({ ...prev, isPlaying: !prev.isPlaying }));
+  };
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 z-40 bg-[#1c1b1b]/95 backdrop-blur-xl border-t border-[#f2ca50]/20 px-4 py-3 text-white shadow-2xl">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-        {/* Left: Track Info */}
-        <div className="flex items-center gap-3 w-full md:w-1/4">
-          <img
-            src={currentSong.coverImage || "https://images.unsplash.com/photo-1545128485-c400e7702796?w=200"}
-            alt={currentSong.title}
-            className="w-12 h-12 rounded-lg object-cover border border-[#f2ca50]/30 shadow-md shrink-0"
-          />
-          <div className="min-w-0 flex-1">
-            <h4 className="text-sm font-semibold truncate text-white hover:text-[#f2ca50] transition cursor-pointer">
-              {currentSong.title}
-            </h4>
-            <p className="text-xs text-[#d0c5af] truncate">{currentSong.artist}</p>
-          </div>
-          <button
-            onClick={() => toggleFavorite(currentSong.id)}
-            className={`p-1.5 rounded-full hover:bg-white/10 transition ${
-              isFav ? "text-red-500 fill-current" : "text-gray-400 hover:text-white"
-            }`}
-          >
-            <Heart className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Center: Controls & Timeline */}
-        <div className="flex flex-col items-center gap-1.5 w-full md:w-2/4">
-          {/* Action Buttons */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={toggleShuffle}
-              className={`p-1.5 rounded-full transition ${
-                isShuffle ? "text-[#f2ca50]" : "text-gray-400 hover:text-white"
-              }`}
-              title="Shuffle"
-            >
-              <Shuffle className="w-4 h-4" />
-            </button>
-            <button onClick={prevTrack} className="p-1.5 text-gray-300 hover:text-white transition">
-              <SkipBack className="w-5 h-5 fill-current" />
-            </button>
-            <button
-              onClick={togglePlayPause}
-              className="p-3 rounded-full bg-gradient-to-r from-[#f2ca50] to-[#d4af37] text-black hover:scale-105 transition shadow-lg"
-            >
-              {isPlaying ? (
-                <Pause className="w-5 h-5 fill-current" />
-              ) : (
-                <Play className="w-5 h-5 fill-current ml-0.5" />
-              )}
-            </button>
-            <button onClick={nextTrack} className="p-1.5 text-gray-300 hover:text-white transition">
-              <SkipForward className="w-5 h-5 fill-current" />
-            </button>
-            <button
-              onClick={toggleRepeat}
-              className={`p-1.5 rounded-full transition ${
-                repeatMode !== "off" ? "text-[#f2ca50]" : "text-gray-400 hover:text-white"
-              }`}
-              title={`Repeat: ${repeatMode}`}
-            >
-              <Repeat className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="flex items-center gap-2 w-full text-xs text-gray-400">
-            <span>{formatTime(currentTime)}</span>
-            <input
-              type="range"
-              min={0}
-              max={duration || 100}
-              value={currentTime}
-              onChange={(e) => seek(Number(e.target.value))}
-              className="flex-1 h-1 bg-[#353534] accent-[#f2ca50] rounded-lg cursor-pointer"
-            />
-            <span>{formatTime(duration)}</span>
-          </div>
-        </div>
-
-        {/* Right: Volume, Speed & Modals */}
-        <div className="flex items-center justify-end gap-3 w-full md:w-1/4">
-          <button
-            onClick={toggleLyricsModal}
-            className="p-2 rounded-lg bg-[#201f1f] hover:bg-[#353534] text-gray-300 hover:text-[#f2ca50] transition flex items-center gap-1 text-xs"
-            title="Lyrics & Rights"
-          >
-            <FileText className="w-4 h-4" />
-            <span className="hidden lg:inline">Lyrics</span>
-          </button>
-
-          {/* Speed Rate Menu */}
-          <div className="relative">
-            <button
-              onClick={() => setShowSpeedMenu(!showSpeedMenu)}
-              className="p-2 rounded-lg bg-[#201f1f] hover:bg-[#353534] text-gray-300 hover:text-[#f2ca50] transition text-xs flex items-center gap-1"
-              title="Playback Speed"
-            >
-              <Gauge className="w-4 h-4" />
-              <span>{playbackRate}x</span>
-            </button>
-            {showSpeedMenu && (
-              <div className="absolute bottom-full right-0 mb-2 w-24 bg-[#201f1f] border border-white/10 rounded-xl p-1 shadow-xl text-xs space-y-1">
-                {[0.5, 0.75, 1.0, 1.25, 1.5, 2.0].map((rate) => (
-                  <button
-                    key={rate}
-                    onClick={() => {
-                      setSpeedRate(rate);
-                      setShowSpeedMenu(false);
-                    }}
-                    className={`w-full text-left px-2 py-1 rounded hover:bg-white/10 ${
-                      playbackRate === rate ? "text-[#f2ca50] font-bold" : "text-gray-300"
-                    }`}
-                  >
-                    {rate}x
-                  </button>
-                ))}
+    <motion.div
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4"
+    >
+      <div className="max-w-7xl mx-auto glass rounded-3xl p-4 flex items-center justify-between border-white/5 border shadow-2xl backdrop-blur-3xl bg-stone-950/40">
+        {/* Song Info */}
+        <div className="flex items-center gap-4 w-1/3">
+          <div className="relative h-14 w-14 rounded-xl overflow-hidden shadow-xl shrink-0">
+            <img src={currentSong.thumbnail} alt="" className="object-cover w-full h-full" />
+            {isPlaying && (
+              <div className="absolute inset-0 bg-saffron/20 flex items-center justify-center">
+                <div className="flex gap-0.5 items-end">
+                  {[...Array(4)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      animate={{ height: [4, 12, 4] }}
+                      transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.1 }}
+                      className="w-1 bg-white rounded-full"
+                    />
+                  ))}
+                </div>
               </div>
             )}
           </div>
+          <div className="min-w-0 pr-4">
+            <h4 className="font-black italic text-sm truncate uppercase tracking-tighter">{currentSong.title}</h4>
+            <p className="text-[10px] font-bold text-saffron uppercase tracking-widest">{currentSong.artist}</p>
+          </div>
+          <button onClick={toggleFavorite} className="hover:text-saffron transition-colors" aria-label="Favorite">
+            <Heart className={`h-4 w-4 ${isFavorite ? "text-saffron fill-saffron" : ""}`} />
+          </button>
+        </div>
 
-          {/* Volume Control */}
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => setVolumeLevel(volume > 0 ? 0 : 0.8)}
-              className="text-gray-400 hover:text-white transition"
-            >
-              {volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+        {/* Controls */}
+        <div className="flex flex-col items-center gap-2 flex-1">
+          <div className="flex items-center gap-8">
+            <button className="text-foreground/40 hover:text-white transition-colors" aria-label="Previous">
+              <SkipBack className="h-5 w-5 fill-current" />
             </button>
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.05}
-              value={volume}
-              onChange={(e) => setVolumeLevel(Number(e.target.value))}
-              className="w-16 h-1 bg-[#353534] accent-[#f2ca50] rounded-lg cursor-pointer"
-            />
+            <button
+              onClick={togglePlay}
+              className="h-12 w-12 rounded-full bg-white text-stone-950 flex items-center justify-center hover:scale-110 transition-all active:scale-95 shadow-xl shadow-white/10"
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? <Pause className="fill-current h-5 w-5" /> : <Play className="fill-current h-5 w-5 ml-1" />}
+            </button>
+            <button className="text-foreground/40 hover:text-white transition-colors" aria-label="Next">
+              <SkipForward className="h-5 w-5 fill-current" />
+            </button>
+          </div>
+
+          <div className="w-full max-w-md flex items-center gap-3">
+            <span className="text-[10px] font-bold opacity-40">{formatTime(currentTime)}</span>
+            <div className="flex-1 h-1 bg-white/10 rounded-full relative overflow-hidden group">
+              <div className="absolute top-0 left-0 h-full bg-saffron transition-all" style={{ width: `${progress}%` }} />
+              <div
+                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ left: `${progress}%` }}
+              />
+            </div>
+            <span className="text-[10px] font-bold opacity-40">{formatTime(durationSeconds)}</span>
           </div>
         </div>
+
+        {/* Extra Actions */}
+        <div className="flex items-center justify-end gap-6 w-1/3">
+          <div className="flex items-center gap-2 group cursor-pointer">
+            <Volume2 className="h-4 w-4 text-foreground/40 group-hover:text-white transition-colors" />
+            <div className="w-20 h-1 bg-white/10 rounded-full hidden md:block">
+              <div className="w-2/3 h-full bg-white/40 rounded-full" />
+            </div>
+          </div>
+          <button className="text-foreground/40 hover:text-white transition-colors hidden sm:block" aria-label="Queue">
+            <ListMusic className="h-5 w-5" />
+          </button>
+          <button className="text-foreground/40 hover:text-white transition-colors hidden sm:block" aria-label="Expand">
+            <Maximize2 className="h-4 w-4" />
+          </button>
+        </div>
       </div>
-    </footer>
+
+      {recentlyPlayed.length > 0 && (
+        <div className="max-w-7xl mx-auto mt-3 text-[10px] uppercase tracking-widest text-foreground/40 font-bold">
+          Recent: {recentlyPlayed.slice(0, 3).map((song) => song.title).join(" | ")}
+        </div>
+      )}
+    </motion.div>
   );
-};
+}
